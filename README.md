@@ -1,5 +1,4 @@
 # Networl-Intrusion-Detection-System-python-
-# Network Intrusion Detection System (Python)
 
 A lightweight, rule-based Network Intrusion Detection System — a from-scratch equivalent to the detection core of Snort/Suricata, built in Python with scapy for live packet capture.
 
