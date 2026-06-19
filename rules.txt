@@ -1,0 +1,25 @@
+# rules.txt — detection signatures for nids.py
+# Lines starting with # are comments.
+
+# --- Brute-force / unauthorized access attempts ---
+ALERT TCP 22 "Possible SSH brute-force attempt" THRESHOLD=5/10
+ALERT TCP 21 "Possible FTP brute-force attempt" THRESHOLD=5/10
+ALERT TCP 3389 "Possible RDP brute-force attempt" THRESHOLD=5/10
+
+# --- Insecure / legacy protocol usage ---
+ALERT TCP 23 "Telnet connection attempt - insecure cleartext protocol" SEVERITY=Medium
+ALERT TCP 21 "FTP connection attempt - cleartext credentials risk" SEVERITY=Low
+
+# --- Reconnaissance ---
+ALERT TCP ANY "Port scan detected (many ports contacted in a short window)" THRESHOLD=15/5 SCAN=true
+ALERT ICMP ANY "Possible ICMP flood / ping sweep" THRESHOLD=20/5
+
+# --- Application-layer attack signatures (payload matching) ---
+ALERT TCP ANY "SQL injection signature in payload (UNION SELECT)" CONTENT="union select" SEVERITY=Critical
+ALERT TCP ANY "SQL injection signature in payload (OR 1=1)" CONTENT="' or 1=1" SEVERITY=Critical
+ALERT TCP ANY "Possible command injection in payload" CONTENT="; rm -rf" SEVERITY=Critical
+ALERT TCP ANY "Possible reverse shell payload" CONTENT="/bin/sh" SEVERITY=Critical
+ALERT TCP ANY "Cross-site scripting signature in payload" CONTENT="<script>" SEVERITY=High
+
+# --- Suspicious volume on common service ports ---
+ALERT UDP 53 "Unusually high DNS query volume from one host" THRESHOLD=50/10
